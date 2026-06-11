@@ -170,6 +170,7 @@ desktop.ini
 # ==========================================
 data/*
 !data/.gitkeep
+!data/sample_dataset.csv
 
 raw_data/
 processed_data/
@@ -194,3 +195,5 @@ outputs/*
 
 results/
 *.log
+
+kaggle-dataset/
