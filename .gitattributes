@@ -1,0 +1,28 @@
+# Set default behavior to automatically normalize line endings.
+* text=auto
+
+# Force specific file types to always use LF (Unix-style) line endings
+# This is crucial for LaTeX, Python, and Markdown to work consistently across all OS.
+*.tex text eol=lf
+*.py text eol=lf
+*.md text eol=lf
+*.txt text eol=lf
+*.json text eol=lf
+*.yml text eol=lf
+*.yaml text eol=lf
+*.csv text eol=lf
+*.sh text eol=lf
+
+# Force specific file types to always use CRLF (Windows-style) for Windows batch files
+*.bat text eol=crlf
+
+# Denote all binary files so Git doesn't try to convert their line endings
+*.png binary
+*.jpg binary
+*.jpeg binary
+*.gif binary
+*.pdf binary
+*.docx binary
+*.zip binary
+*.gz binary
+*.tar binary
