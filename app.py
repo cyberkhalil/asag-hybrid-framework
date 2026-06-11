@@ -6,7 +6,6 @@ Run with:
 """
 
 import logging
-from pathlib import Path
 from typing import Dict, List
 
 import streamlit as st
@@ -28,18 +27,8 @@ st.set_page_config(
     initial_sidebar_state="expanded",
 )
 
-# Path to SymSpell dictionary
+# Path to SymSpell dictionary (auto‑downloaded by the spelling corrector)
 SPELLING_DICT = "frequency_dictionary_en_82_765.txt"
-
-# Check if dictionary exists and warn user
-if not Path(SPELLING_DICT).exists():
-    st.sidebar.warning(
-        f"⚠️ SymSpell dictionary not found: `{SPELLING_DICT}`\n\n"
-        "Please download it from:\n"
-        "https://github.com/mammothb/symspellpy/blob/master/"
-        "symspellpy/frequency_dictionary_en_82_765.txt\n\n"
-        "and place it in the working directory."
-    )
 
 # ---------------------------------------------------------------------------
 # Cached resource loading
