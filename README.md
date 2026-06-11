@@ -149,6 +149,8 @@ You must obtain it separately from the original Kaggle competition page:
 
 Please ensure compliance with the dataset’s terms of use and the Kaggle competition rules.
 
+A small sample dataset (20 rows) is included in `data/sample_dataset.csv` for quick testing. The full evaluation dataset is available on Kaggle: [ASAG-Hybrid-Evaluation-Dataset](https://www.kaggle.com/datasets/mahmoudwkhalil/asag-hybrid)
+
 ---
 
 ## 📖 Citation
