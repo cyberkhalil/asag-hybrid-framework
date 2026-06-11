@@ -6,7 +6,9 @@ scientific and domain-specific vocabulary.
 """
 
 import logging
+import os
 import re
+import urllib.request
 from typing import List, Optional
 
 from symspellpy import SymSpell, Verbosity
@@ -17,9 +19,8 @@ logger = logging.getLogger(__name__)
 class SpellingCorrector:
     """Performs token-level spelling correction using SymSpell.
 
-    The standard English frequency dictionary must be obtained separately.
-    Download ``frequency_dictionary_en_82_765.txt`` from:
-        https://github.com/mammothb/symspellpy/blob/master/symspellpy/frequency_dictionary_en_82_765.txt
+    The standard English frequency dictionary is obtained automatically
+    from the SymSpell GitHub repository if not found locally.
 
     Attributes:
         max_edit_distance: Maximum edit distance for candidate generation.
@@ -27,6 +28,12 @@ class SpellingCorrector:
         sym_spell: Underlying SymSpell instance.
         domain_terms: Set of protected terms that must not be corrected.
     """
+
+    # URL for the standard English frequency dictionary
+    _DICTIONARY_URL = (
+        "https://raw.githubusercontent.com/mammothb/symspellpy/"
+        "master/symspellpy/frequency_dictionary_en_82_765.txt"
+    )
 
     def __init__(
         self,
@@ -42,7 +49,8 @@ class SpellingCorrector:
             prefix_length: Prefix length for SymSpell index.
 
         Raises:
-            FileNotFoundError: If the dictionary file cannot be found.
+            FileNotFoundError: If the dictionary file cannot be found
+                or downloaded.
         """
         self.max_edit_distance = max_edit_distance
         self.prefix_length = prefix_length
@@ -60,14 +68,30 @@ class SpellingCorrector:
         )
 
     def _load_dictionary(self, dictionary_path: str) -> None:
-        """Loads the SymSpell frequency dictionary.
+        """Loads the SymSpell frequency dictionary, downloading if needed.
 
         Args:
             dictionary_path: Path to the dictionary file.
 
         Raises:
-            FileNotFoundError: If the file does not exist.
+            FileNotFoundError: If the file does not exist and cannot
+                be downloaded.
         """
+        # Auto-download if the file doesn't exist locally
+        if not os.path.isfile(dictionary_path):
+            logger.info(
+                "Dictionary not found at '%s'. Downloading automatically from %s ...",
+                dictionary_path,
+                self._DICTIONARY_URL,
+            )
+            try:
+                urllib.request.urlretrieve(self._DICTIONARY_URL, dictionary_path)
+                logger.info("Dictionary downloaded successfully to '%s'.", dictionary_path)
+            except Exception as e:
+                raise FileNotFoundError(
+                    f"Failed to download dictionary from {self._DICTIONARY_URL}: {e}"
+                ) from e
+
         try:
             if not self.sym_spell.load_dictionary(
                 dictionary_path, term_index=0, count_index=1
@@ -144,9 +168,7 @@ class SpellingCorrector:
 if __name__ == "__main__":
     logging.basicConfig(level=logging.INFO)
 
-    # The dictionary file must be present in the working directory.
-    # Download it from:
-    # https://github.com/mammothb/symspellpy/blob/master/symspellpy/frequency_dictionary_en_82_765.txt
+    # The dictionary will be auto-downloaded if not present locally.
     corrector = SpellingCorrector(
         dictionary_path="frequency_dictionary_en_82_765.txt"
     )
