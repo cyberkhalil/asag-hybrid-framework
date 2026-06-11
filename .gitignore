@@ -194,7 +194,3 @@ outputs/*
 
 results/
 *.log
-
-
-# no tex file needed
-*.tex
