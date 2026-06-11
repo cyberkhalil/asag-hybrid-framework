@@ -1,0 +1,25 @@
+# ASAG-Hybrid-Framework core dependencies
+# Python >= 3.10 required
+# Install with: pip install -r requirements.txt
+
+# Core ML & NLP
+torch>=2.0.0
+transformers>=4.35.0
+sentence-transformers>=2.2.0
+scikit-learn>=1.3.0
+
+# Text Processing
+symspellpy>=6.7.0
+nltk>=3.8.0
+
+# Data & Utilities
+pandas>=2.0.0
+numpy>=1.24.0
+tqdm>=4.65.0
+joblib>=1.3.0
+
+# Web Interface
+streamlit>=1.28.0
+
+# Visualization (for XAI)
+matplotlib>=3.7.0
