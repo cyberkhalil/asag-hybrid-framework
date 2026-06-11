@@ -2,8 +2,6 @@
 
 [![Python 3.10+](https://img.shields.io/badge/python-3.10+-blue.svg)](https://www.python.org/downloads/)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](https://opensource.org/licenses/MIT)
-[![arXiv](https://img.shields.io/badge/arXiv-XXXX.XXXXX-b31b1b.svg)](https://arxiv.org/)
-[![DOI](https://img.shields.io/badge/DOI-10.XXXX/zenodo.XXXXXX-blue.svg)](https://doi.org/)
 
 > **A unified, privacy‑preserving hybrid framework for automated short answer grading – achieving human‑level accuracy in real time, with full explainability.**
 
@@ -12,7 +10,7 @@
 ## 📖 Overview
 
 **ASAG‑Hybrid‑Framework** is a production‑ready, modular pipeline that fuses lightweight lexical features (TF‑IDF) with deep semantic representations from transformer models (BERT and SciBERT) to score short student answers against a reference model answer.  
-A token‑level spelling corrector, adaptive fusion layer, and an integrated explainability module make the system accurate, fast, and fully transparent.
+A token‑level spelling corrector, adaptive fusion layer, and an Integrated Gradients‑based explainability module make the system accurate, fast, and fully transparent.
 
 ```
   ┌─────────────────┐      ┌──────────────────┐      ┌─────────────────────────────┐      ┌────────────────────┐      ┌───────────────────────────┐
@@ -30,7 +28,7 @@ A token‑level spelling corrector, adaptive fusion layer, and an integrated exp
 | 💰 **Zero incremental cost** | No API calls, no token billing – free to use at any scale |
 | ⚡ **Sub‑50ms real‑time latency** | End‑to‑end scoring in <50 ms per answer (GPU‑accelerated, <80 ms on CPU) |
 | 🎯 **Human‑level accuracy** | Pearson *r* = 0.86, Spearman *ρ* = 0.85, 3‑Tier Grade‑Band Accuracy = 93% |
-| 🔍 **Full explainability** | Token‑level attribution highlights *why* a particular score was assigned |
+| 🔍 **Full explainability** | Token‑level Integrated Gradients attribution reveals exactly which words influence the score |
 | 🌐 **Offline capability** | Works completely disconnected – only requires the models to be downloaded once |
 
 ---
@@ -42,7 +40,7 @@ A token‑level spelling corrector, adaptive fusion layer, and an integrated exp
 | Model                | Pearson *r* | Spearman *ρ* | 3‑Tier Acc. (%) | Latency (ms) |
 |----------------------|-------------|---------------|-----------------|--------------|
 | TF‑IDF only          | 0.58        | 0.56          | 69              | ~2           |
-| BERT (MiniLM)        | 0.79        | 0.80          | 85              | ~14          |
+| BERT (base-uncased)  | 0.79        | 0.80          | 85              | ~14          |
 | SciBERT              | 0.82        | 0.83          | 88              | ~28          |
 | **Hybrid (ours)**    | **0.86**    | **0.85**      | **93**          | **~50**      |
 | Human inter‑rater    | 0.85        | —             | —               | –            |
@@ -78,28 +76,30 @@ A token‑level spelling corrector, adaptive fusion layer, and an integrated exp
 ## 🚀 Quick Start
 
 ```python
-from asag_hybrid import HybridASAGScorer
+from asag_hybrid import ASAGPipeline
 
-# Initialize the scorer (loads models and indices)
-scorer = HybridASAGScorer()
+# Initialize the pipeline (loads models automatically)
+pipeline = ASAGPipeline(question_type="analytical")
 
 # Example student answer and model answer
 student_answer = "Photosynthesis is when plants use sunlight to make food."
 model_answer = "Photosynthesis converts light energy into chemical energy stored in glucose."
 
-# Get score and explainability highlights
-result = scorer.score(student_answer, model_answer)
+# Get score and grade band
+result = pipeline.score(student_answer, model_answer)
 
 print(f"Score: {result['score']:.2f}")
 print(f"Grade band: {result['grade_band']}")
-print(f"Token highlights: {result['highlights']}")
+print(f"TF-IDF similarity: {result['s_tfidf']:.2f}")
+print(f"Dense similarity: {result['s_dense']:.2f}")
 ```
 
 **Expected output**
 ```
 Score: 0.87
-Grade band: Correct
-Token highlights: {'photosynthesis': 0.99, 'sunlight': 0.94, 'food': 0.72, ...}
+Grade band: correct
+TF-IDF similarity: 0.72
+Dense similarity: 0.91
 ```
 
 ---
@@ -111,9 +111,6 @@ Launch the interactive grading demo with a single command:
 ```bash
 streamlit run app.py
 ```
-
-![Demo Screenshot](docs/demo_screenshot.png)  
-*[Live Demo](http://your-demo-link.com) – placeholder for hosted version*
 
 ---
 
@@ -130,7 +127,7 @@ asag-hybrid-framework/
 │   ├── __init__.py
 │   ├── pipeline.py              # End‑to‑end scoring pipeline
 │   ├── corrector.py             # SymSpell‑based spelling correction
-│   ├── embeddings.py            # TF‑IDF & sentence‑transformer embeddings
+│   ├── embeddings.py            # TF‑IDF & transformer embeddings
 │   ├── fusion.py                # Adaptive regression fusion layer
 │   └── explainer.py             # Token‑level attribution (Integrated Gradients)
 ├── notebooks/                   # Evaluation and analysis notebooks
@@ -181,7 +178,7 @@ This project is licensed under the **MIT License** – see the [LICENSE](LICENSE
 
 - **Islamic University of Gaza**, Deanship of Engineering, for providing the research environment.
 - **Dr. Aiman Ahmed Abusamra** for his invaluable supervision and guidance.
-- The open‑source community behind scikit‑learn, sentence‑transformers, SymSpellPy, NLTK, Streamlit, and PyTorch.
+- The open‑source community behind scikit‑learn, transformers, SymSpellPy, Streamlit, and PyTorch.
 
 ---
 
