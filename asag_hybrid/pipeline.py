@@ -32,8 +32,8 @@ class ASAGPipeline:
 
     # Thresholds for the three-tier grade-band mapping.
     _THRESHOLDS: Dict[str, Dict[str, float]] = {
-        "analytical": {"low": 0.65, "high": 0.82},
-        "fact-dense": {"low": 0.60, "high": 0.78},
+        "analytical": {"low": 0.60, "high": 0.78},   # الأسئلة التحليلية (أكثر مرونة)
+        "fact-dense": {"low": 0.65, "high": 0.82}    # الأسئلة العلمية (أكثر صرامة)
     }
 
     def __init__(

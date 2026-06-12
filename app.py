@@ -34,18 +34,16 @@ SPELLING_DICT = "frequency_dictionary_en_82_765.txt"
 # Cached resource loading
 # ---------------------------------------------------------------------------
 @st.cache_resource
-def load_pipeline(
-    model_name: str, spelling_dict_path: str
-) -> ASAGPipeline:
+@st.cache_resource
+def load_pipeline(model_name: str, spelling_dict_path: str) -> ASAGPipeline:
     """Initialises and caches the heavy ASAG pipeline."""
     logger.info("Loading ASAGPipeline with model=%s", model_name)
     return ASAGPipeline(
         dense_model_name=model_name,
         question_type="analytical",
-        tfidf_vectorizer_path=None,
+        tfidf_vectorizer_path="models/tfidf_vectorizer.joblib",  # <-- تم الإصلاح هنا
         spelling_dict_path=spelling_dict_path,
     )
-
 
 # ---------------------------------------------------------------------------
 # Helper: render coloured text for XAI
